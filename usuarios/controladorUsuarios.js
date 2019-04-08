@@ -13,8 +13,7 @@ router.post('/registrarse', register);
 
 module.exports = router;
 
-function authenticate(req, res, next) 
-{
+function authenticate(req, res, next) {
     userService.authenticate(req.body)
         .then(function (user) {
             if (user) {
@@ -36,5 +35,4 @@ function register(req, res, next) {
         .catch(function (err) {
             next(err);
         });
-
 }

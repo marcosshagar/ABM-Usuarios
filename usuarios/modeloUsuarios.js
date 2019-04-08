@@ -6,7 +6,8 @@ var userSchma = new Schema({
     hash: { type: String,required: true },
     nombre: { type: String, required: true },
     apellido: { type: String, required: true },
-    createdDate: { type: Date, default: Date.now }
+    createdDate: { type: Date, default: Date.now },
+    role: {type: String, default: 'User'}
 });
 
 userSchma.set('toJSON', {virtuals: true});
