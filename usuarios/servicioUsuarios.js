@@ -67,20 +67,21 @@ async function update(id, userParam) {
     // Valido que el usuario exista
     if (!user) throw 'Usuario no encontrado';
     // Valido que el usuario nuevo sea diferente al que ya existe y no este en la base
-    if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
-        throw 'El usuario ' + userParam.username + ' no esta disponible';
+    if (userParam.username || userParam.role) {
+        throw 'Esos datos no se pueden modificar';
     }
 
-    // aplico has a la contraseña si se cambio
+    // aplico hash a la contraseña si se cambio
     if (userParam.password) {
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
 
-    // Le asigno las propiedades del parametro al usuario que voy a gurdar en la db
-    Object.assign(user, userParam);
+    await User.findByIdAndUpdate(id, userParam);
+    // // Le asigno las propiedades del parametro al usuario que voy a gurdar en la db
+    // Object.assign(user, userParam);
 
-    // guardo el usuario
-    await user.save();
+    // // guardo el usuario
+    // await user.save();
 }
 
 //------ FUNCION DELETE ----------------

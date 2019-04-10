@@ -18,9 +18,7 @@ app.use(exJwt());
 // Ruta Principal de las acciones/metodos de usuarios
 app.use('/usuarios', require('./usuarios/controladorUsuarios'));
 // Menejo de errores
-app.use(errorHandler)
-
-//Lucas Gato
+app.use(errorHandler);
 
 app.listen(5000, function (){
   console.log("El servidor esta conectado");
