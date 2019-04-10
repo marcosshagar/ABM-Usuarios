@@ -5,9 +5,9 @@ var userService = require('./servicioUsuarios');
 // Defino las rutas paras las acciones a realizar
 router.post('/login', login);
 router.post('/registrarse', register);
-// router.get('/', getAll);
+// router.get('/', getAll); //Admin
 router.get('/current', getCurrent);
-router.get('/:id', getUser);
+router.get('/:id', getUser); //Admin
 router.put('/:id', update);
 router.delete('/:id', _delete);
 
