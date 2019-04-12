@@ -20,6 +20,12 @@ app.use('/usuarios', require('./usuarios/controladorUsuarios'));
 // Menejo de errores
 app.use(errorHandler);
 
-app.listen(5000, function (){
-  console.log("El servidor esta conectado");
+if (process.env.NODE_ENV === 'production') {
+    port = process.env.PORT || 80;
+} else {
+    port = 5000;
+}
+
+app.listen(port, function () {
+    console.log("Server listening on port " + port);
 });
