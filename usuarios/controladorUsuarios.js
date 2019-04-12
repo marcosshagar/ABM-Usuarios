@@ -28,6 +28,7 @@ function authenticate(req, res, next) {
 }
 
 function register(req, res, next) {
+    console.log("inicio registro");
     userService.create(req.body)
         .then(function(){
             res.json({ message: "Se registro el usuario " + req.body.username + " correctamente."});
