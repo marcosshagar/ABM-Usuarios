@@ -43,20 +43,23 @@ async function getById(id) {
 
 //------ FUNCION CREATE ----------------
 async function create(userParam) {
+    console.log("creando usuario", userParam);
     // valido que el usuario no este en uso
     if (await User.findOne({ username: userParam.username })) {
         throw 'El usuario' + userParam.username + ' no esta disponible';
+    }else{
+        console.log("El usuario esta disponible");
     }
-
     //Creo el nuevo usuario con los datos del usuario del request
     var user = new User(userParam);
 
     // aplico hash a la contraseña
     if (userParam.password) {
+        console.log("encripto");
         user.hash = bcrypt.hashSync(userParam.password, 10);
     }
-
-    // guardo el nuevo usuario
+ 
+    console.log("guardo el nuevo usuario");
     await user.save();
 }
 
