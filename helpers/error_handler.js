@@ -17,6 +17,10 @@ function errorHandler(err, req, res, next) {
         return res.status(401).json({ message: 'Invalid Token' });
     }
 
+    if (err.name === 'CastError') {
+        return res.status(404).json({ message: 'ID de Usuario Invalido' });
+    }
+
     // Error por defecto del servidor
     return res.status(500).json({ message: err.message });
 }

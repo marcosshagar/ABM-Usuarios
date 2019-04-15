@@ -4,7 +4,7 @@ var userService = require('./servicioUsuarios');
 
 // Defino las rutas paras las acciones a realizar
 router.post('/authenticate', authenticate);
-router.post('/registrarse', register);
+router.post('/create', create);
 // router.get('/', getAll); //Admin
 router.get('/me', sesionUser);
 router.get('/:id', getUser); //Admin
@@ -19,7 +19,7 @@ function authenticate(req, res, next) {
             if (user) {
                 res.json(user);
             } else {
-                res.status(400).json({message: "Usuario o Contraseña incorrecta"})
+                res.status(400).json({message: "Usuario o Contraseña incorrecta"});
             }
         })
         .catch(function (err) {
@@ -27,7 +27,7 @@ function authenticate(req, res, next) {
         });
 }
 
-function register(req, res, next) {
+function create(req, res, next) {
     console.log("inicio registro");
     userService.create(req.body)
         .then(function(){
@@ -42,9 +42,11 @@ function getUser(req, res, next) {
     userService.getById(req.params.id)
         .then(function(user){
             if(user){
+                console.log("Usuario encontrado")
                 res.json(user);
             } else {
-                res.sendStatus(404);
+                console.log("Sending Status")
+                res.status(404).json({message: "Usuario no encontrado"});
             }
         })
         .catch(function(err){
@@ -58,10 +60,12 @@ function sesionUser(req, res, next) {
             if(user){
                 res.json(user);
             } else {
+                console.log("envio Not Found");
                 res.sendStatus(404);
             }
         })
         .catch(function(err){
+            console.log(err);
             next(err);
         });
 }
