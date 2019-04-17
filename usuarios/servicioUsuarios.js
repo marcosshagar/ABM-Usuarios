@@ -3,7 +3,7 @@ var jwt     = require('jsonwebtoken');
 var bcrypt  = require('bcryptjs');
 var db      = require('helpers/db');
 var User    = db.User;
-//var validarPassword = require('helpers/validate_password');
+var validarPassword = require('helpers/validate_password');
 
 module.exports = {
     authenticate,
