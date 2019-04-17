@@ -52,7 +52,7 @@ async function create(userParam) {
         console.log("El usuario esta disponible");
     }
 
-    //validarPassword(userParam.password);
+    validarPassword(userParam.password);
 
     //Creo el nuevo usuario con los datos del usuario del request
     var user = new User(userParam);
@@ -80,16 +80,11 @@ async function update(id, userParam) {
 
     // verifico que sea valida y aplico hash a la contraseña si se cambio
     if (userParam.password) {
-        //validarPassword(userParam.password);
+        validarPassword(userParam.password);
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
 
     await User.findByIdAndUpdate(id, userParam);
-    // // Le asigno las propiedades del parametro al usuario que voy a gurdar en la db
-    // Object.assign(user, userParam);
-
-    // // guardo el usuario
-    // await user.save();
 }
 
 //------ FUNCION DELETE ----------------
