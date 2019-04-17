@@ -3,7 +3,7 @@ var jwt     = require('jsonwebtoken');
 var bcrypt  = require('bcryptjs');
 var db      = require('helpers/db');
 var User    = db.User;
-var validarPassword = require('helpers/validate_password');
+//var validarPassword = require('helpers/validate_password');
 
 module.exports = {
     authenticate,
@@ -52,7 +52,7 @@ async function create(userParam) {
         console.log("El usuario esta disponible");
     }
 
-    validarPassword(userParam.password);
+    //validarPassword(userParam.password);
 
     //Creo el nuevo usuario con los datos del usuario del request
     var user = new User(userParam);
@@ -80,7 +80,7 @@ async function update(id, userParam) {
 
     // verifico que sea valida y aplico hash a la contraseña si se cambio
     if (userParam.password) {
-        validarPassword(userParam.password);
+        //validarPassword(userParam.password);
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
 
