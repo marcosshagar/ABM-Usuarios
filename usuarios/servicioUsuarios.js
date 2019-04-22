@@ -23,7 +23,7 @@ async function authenticate({ username, password }) {
         // Le asigno a noHash todas las propiedades del usuario db menos hash (asi funcionan los ...)
         var { hash, ...noHash } = user.toObject();
         // le asigno al token los datos que va a usar durante toda la sesion
-        var token = jwt.sign({ sub: user.id }, config.secretPass);
+        var token = jwt.sign({ sub: user.id, role: user.role }, config.secretPass);
         // Devuelvo el token y el Usuario db sin la contraseña hasheada
         return { ...noHash,
                  token };
@@ -31,15 +31,25 @@ async function authenticate({ username, password }) {
 }
 
 //------ FUNCION GET ALL ----------------
-async function getAll() {
-    // Busca todos los datos menos hash
-    return await User.find().select('-hash');
+async function getAll(userRole) {
+    console.log(userRole);
+    if (userRole === "Admin") {
+        // Busca todos los datos menos hash
+        return await User.find().select('-hash');
+    } else {
+        throw "No tiene permisos de Administrador";
+    }
 }
 
 //------ FUNCION GET ByID ----------------
-async function getById(id) {
-    // Busca los datos del id menos hash
-    return await User.findById(id).select('-hash');
+async function getById(userRole, id) {
+    console.log(userRole);
+    if (userRole === "Admin") {
+        // Busca los datos del id menos hash
+        return await User.findById(id).select('-hash');
+    } else {
+        throw "No tiene permisos de Administrador";
+    }
 }
 
 //------ FUNCION CREATE ----------------

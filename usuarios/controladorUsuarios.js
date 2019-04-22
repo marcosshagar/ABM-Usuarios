@@ -5,7 +5,7 @@ var userService = require('./servicioUsuarios');
 // Defino las rutas paras las acciones a realizar
 router.post('/authenticate', authenticate);
 router.post('/create', create);
-// router.get('/', getAll); //Admin
+router.get('/', getAll); //Admin
 router.get('/me', sesionUser);
 router.get('/:id', getUser); //Admin
 router.put('/:id', update);
@@ -13,6 +13,7 @@ router.delete('/:id', _delete);
 
 module.exports = router;
 
+//----- FUNCION PARA AUTENTICAR UN USUARIO -----
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
         .then(function (user) {
@@ -27,6 +28,7 @@ function authenticate(req, res, next) {
         });
 }
 
+//----- FUNCION PARA CREAR UN USUARIO -----
 function create(req, res, next) {
     console.log("inicio registro");
     userService.create(req.body)
@@ -38,8 +40,9 @@ function create(req, res, next) {
         });
 }
 
+//----- FUNCION PARA OBTENER UN USUARIO ESPECIFICO -----
 function getUser(req, res, next) {
-    userService.getById(req.params.id)
+    userService.getById(req.user.role, req.params.id)
         .then(function(user){
             if(user){
                 console.log("Usuario encontrado")
@@ -54,6 +57,7 @@ function getUser(req, res, next) {
         });
 }
 
+//----- FUNCION PARA OBTENER EL USUARIO DE LA SESION ACTUAL -----
 function sesionUser(req, res, next) {
     userService.getById(req.user.sub)
         .then(function(user){
@@ -70,6 +74,7 @@ function sesionUser(req, res, next) {
         });
 }
 
+//----- FUNCION PARA MODIFICAR LOS DATOS DEL USUARIO -----
 function update(req, res, next){
     userService.update(req.params.id, req.body)
     .then(function(){
@@ -80,6 +85,7 @@ function update(req, res, next){
     });
 }
 
+//----- FUNCION PARA ELIMINAR UN USUARIO -----
 function _delete(req, res, next){
     userService._delete(req.params.id)
     .then(function(){
@@ -88,5 +94,15 @@ function _delete(req, res, next){
     .catch(function(err){
         next(err);
     });
+}
 
+//----- FUNCION PARA OBTENER TODOS LOS USUARIOS EXISTENTES -----
+function getAll(req, res, next) {
+    userService.getAll(req.user.role)
+        .then(function(users){
+            res.json(users);
+        })
+        .catch(function(err){
+            next(err);
+        });
 }
