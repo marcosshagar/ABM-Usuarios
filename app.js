@@ -16,7 +16,9 @@ app.use(cors());
 // Autenticacion a la Api
 app.use(exJwt());
 // Ruta Principal de las acciones/metodos de usuarios
-app.use('/usuarios', require('./usuarios/controladorUsuarios'));
+app.use('/usuarios', require('./usuarios/userController'));
+// Ruta para realizar pagos
+app.use('/payment', require('./payments/paymentController'));
 // Menejo de errores
 app.use(errorHandler);
 

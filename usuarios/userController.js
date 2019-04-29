@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var userService = require('./servicioUsuarios');
+var userService = require('./userService');
 
 // Defino las rutas paras las acciones a realizar
 router.post('/authenticate', authenticate);

@@ -1,7 +1,8 @@
 module.exports = errorHandler;
 
 function errorHandler(err, req, res, next) {
-    
+    console.log("Ingreso a manejo de errores");
+    console.log(err);
     if (typeof (err) === 'string') {
         // Errores de la aplicacion
         return res.status(400).json({ message: err });
@@ -18,7 +19,7 @@ function errorHandler(err, req, res, next) {
     }
 
     if (err.name === 'CastError') {
-        return res.status(404).json({ message: 'ID de Usuario Invalido' });
+        return res.status(400).json({ message: 'ID de Usuario Invalido' });
     }
 
     // Error por defecto del servidor
