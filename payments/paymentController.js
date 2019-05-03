@@ -10,7 +10,6 @@ function payments(req, res, next) {
     console.log("Ingreso al controlador para pagar");
 
     console.log("Comienzo el request");
-
     request.post("https://api.mercadopago.com/v1/payments?access_token=TEST-7094732018586761-042619-0460da5877116609ef45498be16d8e41-221281264")
         .send(req.body)
         .set('Content-Type', 'application/json')
@@ -19,5 +18,5 @@ function payments(req, res, next) {
                 res.send(payStatus);
         }).catch(function(err){
             next(err.response.body.message);
-        })
+        });
 }
