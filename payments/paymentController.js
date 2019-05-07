@@ -1,22 +1,41 @@
 var express = require('express');
 var router = express.Router();
-var request = require('superagent');
+var paymentService = require("./PaymentService");
 
 router.post('/pay', payments);
 
 module.exports = router;
 
-function payments(req, res, next) {
+async function  payments(req, res, next) {
+    //console.log(req);
     console.log("Ingreso al controlador para pagar");
 
-    console.log("Comienzo el request");
-    request.post("https://api.mercadopago.com/v1/payments?access_token=TEST-7094732018586761-042619-0460da5877116609ef45498be16d8e41-221281264")
-        .send(req.body)
-        .set('Content-Type', 'application/json')
-        .then(function (payStatus) {
-                console.log("Se RealiZo el pago")
-                res.send(payStatus);
-        }).catch(function(err){
-            next(err.response.body.message);
-        });
+    var paymentDto = {
+        userId: req.user.sub,
+        amount: req.body.amount,
+        mpPaymentMethodId: req.body.mp_payment_method_id,
+        dni : req.body.dni,
+        mpCardToken: req.body.mp_card_token
+    };
+
+    validateBody(paymentDto);
+
+    console.log("payment Dto", paymentDto);
+
+    try{
+
+        let payment = await paymentService.create(paymentDto);
+        console.log(payment);
+        return res.status(201).json(payment);
+
+    } catch (err) {
+
+        console.error("error en servicio");
+        next (err);
+
+    }
+}
+
+function validateBody(payment) {
+    
 }

@@ -21,7 +21,9 @@ function errorHandler(err, req, res, next) {
     if (err.name === 'CastError') {
         return res.status(400).json({ message: 'ID de Usuario Invalido' });
     }
-
+    if (err.error_type == "payment"){
+        res.status(err.status_code).json(err);
+    }
     // Error por defecto del servidor
     return res.status(500).json({ message: err.message });
 }

@@ -9,5 +9,6 @@ mongoose.connect(process.env.MONGOLAB_PURPLE_URI || config.connectionString, { u
 mongoose.set('useFindAndModify', false);
 
 module.exports ={
-     User: require('../usuarios/userModel')
+     User: require('../usuarios/userModel'),
+     Payment: require('../payments/paymentModel')
 };

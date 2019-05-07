@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var userSchma = new Schema({
+var userSchema = new Schema({
     username: { type: String, unique: true, required: true },
     hash: { type: String,required: true },
     nombre: { type: String, required: true },
@@ -10,6 +10,6 @@ var userSchma = new Schema({
     role: {type: String, default: 'User'}
 });
 
-userSchma.set('toJSON', {virtuals: true});
+userSchema.set('toJSON', {virtuals: true});
 
-module.exports = mongoose.model('User', userSchma);
+module.exports = mongoose.model('User', userSchema);
