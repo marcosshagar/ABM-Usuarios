@@ -57,7 +57,8 @@ async function create(paymentDto) {
 
         console.log("Mercado pago Response", mpResonse);
 
-        saveMpResponse = {
+        transactionData = {
+            userId: paymentDto.userId,
             transaction_amount: mpResonse.body.transaction_amount,
             transaction_id: mpResonse.body.id,
             payment_method_id: mpResonse.body.payment_method_id,
@@ -67,14 +68,15 @@ async function create(paymentDto) {
             installments: mpResonse.body.installments
         }
 
-        console.log("Modelo de pago a guardar en base de datos", saveMpResponse);
+        console.log("Modelo de pago a guardar en base de datos", transactionData);
         
-        Object.assign(paymentModel, saveMpResponse);
-
-        await paymentModel.save();
+        Object.assign(paymentModel, transactionData);
+        console.log("Asigno los datos del response a mi objeto");
+        var model = await paymentModel.save();
+        console.log("se Guardo la Transacion en la base de datos");
 
     } catch (err) {
-    
+        
         errorModel = {
             name: err.message,
             status_code: err.status,
@@ -86,6 +88,6 @@ async function create(paymentDto) {
 
         throw err;
     }
-
+    
     return model;
 }

@@ -30,7 +30,7 @@ async function  payments(req, res, next) {
 
     } catch (err) {
 
-        console.error("error en servicio");
+        console.error("error en controlador");
         next (err);
 
     }
