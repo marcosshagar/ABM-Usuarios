@@ -58,36 +58,34 @@ async function create(paymentDto) {
         console.log("Mercado pago Response", mpResonse);
 
         saveMpResponse = {
-            transaction_amount: mpResonse.transaction_amount,
-            transaction_id: mpResonse.id,
-            payment_method_id: mpResonse.payment_method_id,
-            payment_type_id: mpResonse.payment_type_id,
-            status: mpResonse.status,
-            status_detail: mpResonse.status_detail,
-            installments: mpResonse.installments
+            transaction_amount: mpResonse.body.transaction_amount,
+            transaction_id: mpResonse.body.id,
+            payment_method_id: mpResonse.body.payment_method_id,
+            payment_type_id: mpResonse.body.payment_type_id,
+            status: mpResonse.body.status,
+            status_detail: mpResonse.body.status_detail,
+            installments: mpResonse.body.installments
         }
 
         console.log("Modelo de pago a guardar en base de datos", saveMpResponse);
         
         Object.assign(paymentModel, saveMpResponse);
-        //paymentModel = saveMpResponse;
+
+        await paymentModel.save();
 
     } catch (err) {
-        console.log("CATCH ERROR PAYMENTE SERVICE", err);
-        throw err;
-    }
-
-    var model = await paymentModel.save();
-
-   /* if (model.status=="error") {
-
-        var err = {
-            error_type: "payment",
-            status_code: 422
+    
+        errorModel = {
+            name: err.message,
+            status_code: err.status,
+            message: err.response.body.message
         };
 
+        console.log("Modelo de error", errorModel);
+        Object.assign(err, errorModel);
+
         throw err;
-    }*/
+    }
 
     return model;
 }
