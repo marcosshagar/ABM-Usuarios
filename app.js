@@ -16,10 +16,18 @@ app.use(cors());
 // Autenticacion a la Api
 app.use(exJwt());
 // Ruta Principal de las acciones/metodos de usuarios
-app.use('/usuarios', require('./usuarios/controladorUsuarios'));
+app.use('/usuarios', require('./usuarios/userController'));
+// Ruta para realizar pagos
+app.use('/payment', require('./payments/paymentController'));
 // Menejo de errores
-app.use(errorHandler)
+app.use(errorHandler);
 
-app.listen(5000, function (){
-  console.log("El servidor esta conectado");
+if (process.env.NODE_ENV === 'production') {
+    port = process.env.PORT || 80;
+} else {
+    port = 5000;
+}
+
+app.listen(port, function () {
+    console.log("Server listening on port " + port);
 });

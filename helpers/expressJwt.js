@@ -1,6 +1,6 @@
 var expressJwt = require('express-jwt');
 var config = require('config.json');
-var userService = require('../usuarios/servicioUsuarios');
+//var userService = require('../usuarios/servicioUsuarios');
 
 module.exports = jwt;
 
@@ -11,6 +11,6 @@ function jwt()
     // Devuelvo la Clave secreta a menos que sean estas Rutas
     return expressJwt({ secret }).unless({
         //Son rutas que no necesitan autenticacion
-        path: [ '/usuarios/login', '/usuarios/registrarse' ]
+        path: [ '/usuarios/authenticate', '/usuarios/create' ]
     });
 }

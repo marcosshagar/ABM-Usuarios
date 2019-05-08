@@ -1,22 +1,31 @@
 module.exports = errorHandler;
 
 function errorHandler(err, req, res, next) {
-    
+    console.log("Ingreso a manejo de errores");
+    console.log(err);
     if (typeof (err) === 'string') {
-        // custom application error
+        // Errores de la aplicacion
+        console.log("TypeOF = String");
         return res.status(400).json({ message: err });
     }
 
     if (err.name === 'ValidationError') {
-        // mongoose validation error
+        // Error de Validacion de mongoose
         return res.status(400).json({ message: err.message });
     }
 
     if (err.name === 'UnauthorizedError') {
-        // jwt authentication error
+        // Error de Autorizacion de JWT
         return res.status(401).json({ message: 'Invalid Token' });
     }
 
-    // default to 500 server error
+    if (err.name === 'CastError') {
+        return res.status(400).json({ message: err.message });
+    }
+
+    if (err.name === "Bad Request"){
+       return res.status(err.status_code).json({ message: err.message });
+    }
+    // Error por defecto del servidor
     return res.status(500).json({ message: err.message });
 }
