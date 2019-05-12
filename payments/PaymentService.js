@@ -21,12 +21,18 @@ async function getAll(userRole) {
 }
 
 //------ FUNCION GET ByID ----------------
-async function getById(userRole, userId, id) {
-    let payment = await User.findById(id).select('-hash');
-
-    if(payment._id !== userId && userRole !== "Admin") {
+//async function getById(userRole, userId, id) {
+async function getById(userRole, transaction_id) {
+    
+    if (userRole !== "Admin") {
         throw "No tiene permisos de Administrador";
     }
+
+    //let payment = await Payment.findById(transaction_id);
+    let payment = await Payment.findOne({ transaction_id: transaction_id}).select('-__v');
+    /*if(payment._id !== userId && userRole !== "Admin") {
+        throw "No tiene permisos de Administrador";
+    }*/
 
     return payment;
 }
@@ -72,22 +78,54 @@ async function create(paymentDto) {
         
         Object.assign(paymentModel, transactionData);
         console.log("Asigno los datos del response a mi objeto");
-        var model = await paymentModel.save();
-        console.log("se Guardo la Transacion en la base de datos");
+        //var model = await paymentModel.save();
+        
+        console.log("Comienzo a guardar la Transaccion");
+        
 
     } catch (err) {
-        
-        errorModel = {
-            name: err.message,
-            status_code: err.status,
-            message: err.response.body.message
-        };
+        console.log(err);
 
-        console.log("Modelo de error", errorModel);
-        Object.assign(err, errorModel);
+        if (err.code === "ENOTFOUND") {
+
+            err.message = "No se realizo la conexion a api.mercadopago.com";
+
+        } else {
+
+            errorModel = {
+                name: err.message,
+                status_code: err.status,
+                message: err.response.body.message
+            };
+
+            console.log("Modelo de error", errorModel);
+            Object.assign(err, errorModel);
+        }
 
         throw err;
     }
+
+    await savePayment(paymentModel);
+
+    return paymentModel;
     
-    return model;
 }
+
+async function savePayment(payment) {
+
+    try {
+
+        await payment.save();
+        console.log("se Guardo la Transacion en la base de datos");
+
+    } catch (error) {
+        console.log("Comienzo a devolver la plata");
+        var refund = await request.post(config.refundRequest.replace(":id", payment.transaction_id)).set('Content-Type', 'application/json');
+        console.log("Devuelvo la plata", refund);
+ 
+        console.log("ERROR EN GUARDAR EL PAGO", error);
+        throw error;
+    }
+}
+
+//FALTA VER COMO HACE PARA QUE HAGA BIEN EL MANEJO DE ERRORES Y QUE DEVUELVA EL ERROR
