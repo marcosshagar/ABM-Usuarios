@@ -1,3 +1,5 @@
+//Marcos Shanahan
+
 const config = require('config.json');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;

@@ -1,3 +1,5 @@
+//Marcos Shanahan
+
 var config  = require('config.json');
 var db      = require('helpers/db');
 var Payment = db.Payment;
