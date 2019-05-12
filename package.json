@@ -1,7 +1,8 @@
 {
+  "comment": "Marcos Shanahan",
   "name": "miapp-taller6",
   "version": "1.0.0",
-  "description": "Proyecto Web para Taller VI",
+  "description": "API para ABM de Usuarios, integrada a MercadoPago para poder realizar pagos Online",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,7 +23,6 @@
     "mongoose": "^5.4.22",
     "nodemon": "^1.19.0",
     "password-validator": "^4.1.1",
-    "request": "^2.88.0",
     "rootpath": "^0.1.2",
     "superagent": "^5.0.4"
   }

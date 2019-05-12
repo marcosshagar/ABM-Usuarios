@@ -1,3 +1,5 @@
+//Marcos Shanahan
+
 var config  = require('config.json');
 var jwt     = require('jsonwebtoken');
 var bcrypt  = require('bcryptjs');

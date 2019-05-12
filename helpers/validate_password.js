@@ -1,3 +1,5 @@
+//Marcos Shanahan
+
 var passwordValidator = require('password-validator');
 var validators = new passwordValidator();
 
