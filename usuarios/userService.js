@@ -5,7 +5,7 @@ var jwt     = require('jsonwebtoken');
 var bcrypt  = require('bcryptjs');
 var db      = require('helpers/db');
 var User    = db.User;
-var validarPassword = require('helpers/validate_password');
+var validateData = require('helpers/validate_data');
 
 module.exports = {
     authenticate,
@@ -63,8 +63,10 @@ async function create(userParam) {
     }else{
         console.log("El usuario esta disponible");
     }
-
-    validarPassword(userParam.password);
+    // Valido el Usuario
+    validateData.validarUsername(userParam.username);
+    // Valido la Contraseña
+    validateData.validarPassword(userParam.password);
 
     //Creo el nuevo usuario con los datos del usuario del request
     var user = new User(userParam);

@@ -23,18 +23,13 @@ async function getAll(userRole) {
 }
 
 //------ FUNCION GET ByID ----------------
-//async function getById(userRole, userId, id) {
-async function getById(userRole, transaction_id) {
-    
-    if (userRole !== "Admin") {
-        throw "No tiene permisos de Administrador";
-    }
+async function getById(userRole, userId, transaction_id) {
 
-    //let payment = await Payment.findById(transaction_id);
     let payment = await Payment.findOne({ transaction_id: transaction_id}).select('-__v');
-    /*if(payment._id !== userId && userRole !== "Admin") {
-        throw "No tiene permisos de Administrador";
-    }*/
+
+    if (userRole !== "Admin" || userId !== payment.userId) {
+        throw "No tiene permisos de Buscar esa transaccion";
+    }
 
     return payment;
 }
@@ -129,5 +124,3 @@ async function savePayment(payment) {
         throw error;
     }
 }
-
-//FALTA VER COMO HACE PARA QUE HAGA BIEN EL MANEJO DE ERRORES Y QUE DEVUELVA EL ERROR

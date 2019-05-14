@@ -41,15 +41,14 @@ async function  payments(req, res, next) {
 }
 
 async function getPayment(req, res, next) {
-    //paymentService.getById(req.user.role, req.user.sub, req.params.id)
-    await paymentService.getById(req.user.role, req.params.id)
+    await paymentService.getById(req.user.role, req.user.sub, req.params.id)
         .then(function (payment) {
             if (payment) {
                 console.log("Pago encontrado")
                 res.json(payment);
             } else {
                 console.log("Sending Status")
-                res.status(404).json({ message: "Transaccion no encontrado" });
+                res.status(404).json({ message: "Transaccion no encontrada" });
             }
         })
         .catch(function (err) {
