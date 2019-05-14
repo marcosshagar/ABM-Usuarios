@@ -40,7 +40,7 @@ function validarUsername (username){
     console.log(validarUser);
 
     if (validarUser){
-        return password;
+        return username;
     } else {
         throw "El Usuario debe tener entre 5 y 20 caracteres, y no puede contener espacios"
     }
