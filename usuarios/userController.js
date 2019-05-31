@@ -79,8 +79,8 @@ async function sesionUser(req, res, next) {
 //----- FUNCION PARA MODIFICAR LOS DATOS DEL USUARIO -----
 async function update(req, res, next){
     await userService.update(req.params.id, req.body)
-    .then(function(){
-        res.json({message: "Se modificaron los datos del Usuario"});
+    .then(function(user){
+            res.json({ message: "Se modificaron los datos del Usuario" });
     })
     .catch(function(err){
         next(err);

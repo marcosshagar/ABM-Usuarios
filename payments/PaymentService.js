@@ -15,7 +15,6 @@ module.exports = {
 async function getAll(userRole) {
     console.log(userRole);
     if (userRole === "Admin") {
-        // Busca todos los datos menos hash
         return await Payment.find();
     } else {
         throw "No tiene permisos de Administrador";
@@ -27,8 +26,14 @@ async function getById(userRole, userId, transaction_id) {
 
     let payment = await Payment.findOne({ transaction_id: transaction_id}).select('-__v');
 
-    if (userRole !== "Admin" || userId !== payment.userId) {
-        throw "No tiene permisos de Buscar esa transaccion";
+    if (userRole !== "Admin" || (payment && userId !== payment.userId)) {
+
+        errorModel = {
+            name: "Forbidden",
+            message: "No estas autorizado para ver esta transaccion"
+        };
+
+        throw errorModel;
     }
 
     return payment;
@@ -75,7 +80,6 @@ async function create(paymentDto) {
         
         Object.assign(paymentModel, transactionData);
         console.log("Asigno los datos del response a mi objeto");
-        //var model = await paymentModel.save();
         
         console.log("Comienzo a guardar la Transaccion");
         

@@ -83,7 +83,7 @@ async function create(userParam) {
 
 //------ FUNCION UPDATE ----------------
 async function update(id, userParam) {
-    var user = User.findById(id);
+    var user = await User.findById(id);
 
     // Valido que el usuario exista
     if (!user) throw 'Usuario no encontrado';

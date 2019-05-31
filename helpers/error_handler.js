@@ -7,7 +7,6 @@ function errorHandler(err, req, res, next) {
     console.log(err);
     if (typeof (err) === 'string') {
         // Errores de la aplicacion
-        console.log("TypeOF = String");
         return res.status(400).json({ message: err });
     }
 
@@ -28,6 +27,11 @@ function errorHandler(err, req, res, next) {
     if (err.name === "Bad Request"){
        return res.status(err.status_code).json({ message: err.message });
     }
+
+    if (err.name === "Forbidden") {
+        return res.status(403).json({ message: err.message });
+    }
+
     // Error por defecto del servidor
     return res.status(500).json({ message: err.message });
 }
