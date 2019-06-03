@@ -1,6 +1,7 @@
 {
     "comment": "Marcos Shanahan",
     "connectionString": "mongodb://localhost:27017/usuarios",
+    "dockerConnString": "mongodb://172.17.0.2:27017/test?gssapiServiceName=mongodb",
     "secretPass": "marcos",
     "paymentRequest": "https://api.mercadopago.com/v1/payments?access_token=TEST-7094732018586761-042619-0460da5877116609ef45498be16d8e41-221281264",
     "refundRequest": "https://api.mercadopago.com/v1/payments/:id/refunds?access_token=TEST-7094732018586761-042619-0460da5877116609ef45498be16d8e41-221281264"
