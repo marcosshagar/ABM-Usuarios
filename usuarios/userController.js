@@ -22,7 +22,7 @@ async function authenticate(req, res, next) {
             if (user) {
                 res.json(user);
             } else {
-                res.status(400).json({message: "Usuario o Contraseña incorrecta"});
+                res.status(404).json({message: "Usuario o Contraseña incorrecta"});
             }
         })
         .catch(function (err) {
@@ -35,7 +35,7 @@ async function create(req, res, next) {
     console.log("inicio registro");
     await userService.create(req.body)
         .then(function(){
-            res.json({ message: "Se registro el usuario " + req.body.username + " correctamente."});
+            res.status(201).json({ message: "Se registro el usuario " + req.body.username + " correctamente."});
         })
         .catch(function (err) {
             next(err);
