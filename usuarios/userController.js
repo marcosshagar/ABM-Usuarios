@@ -20,9 +20,10 @@ async function authenticate(req, res, next) {
     await userService.authenticate(req.body)
         .then(function (user) {
             if (user) {
-                res.json(user);
+                res.status(200).json(user);
             } else {
-                res.status(404).json({message: "Usuario o Contraseña incorrecta"});
+                //No se púede interpretar debido a sintaxis invalida
+                res.status(400).json({message: "Usuario o Contraseña incorrecta"});
             }
         })
         .catch(function (err) {
@@ -48,7 +49,7 @@ async function getUser(req, res, next) {
         .then(function(user){
             if(user){
                 console.log("Usuario encontrado")
-                res.json(user);
+                res.status(200).json(user);
             } else {
                 console.log("Sending Status")
                 res.status(404).json({message: "Usuario no encontrado"});
@@ -79,19 +80,20 @@ async function sesionUser(req, res, next) {
 //----- FUNCION PARA MODIFICAR LOS DATOS DEL USUARIO -----
 async function update(req, res, next){
     await userService.update(req.params.id, req.body)
-    .then(function(user){
-            res.json({ message: "Se modificaron los datos del Usuario" });
-    })
-    .catch(function(err){
-        next(err);
-    });
+        .then(function(user){
+            // Ver que onda el 200
+            res.status(201).json({ message: "Se modificaron los datos del Usuario" });
+        })
+        .catch(function(err){
+            next(err);
+        });
 }
 
 //----- FUNCION PARA ELIMINAR UN USUARIO -----
 async function _delete(req, res, next){
     await userService._delete(req.params.id)
-    .then(function(){
-        res.json({message: "Se elimino el usuario"});
+    .then(function(user){
+        res.status(200).json({message: "Se elimino el usuario"});
     })
     .catch(function(err){
         next(err);
@@ -102,7 +104,13 @@ async function _delete(req, res, next){
 async function getAll(req, res, next) {
     await userService.getAll(req.user.role)
         .then(function(users){
-            res.json(users);
+            if(users){
+                console.log("Usuarios encontrados")
+                res.status(200).json(users);
+            } else {
+                console.log("Sending Status")
+                res.status(404).json({message: "No hay Usuarios Registrados"});
+            }
         })
         .catch(function(err){
             next(err);

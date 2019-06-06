@@ -3,7 +3,7 @@
 const config = require('config.json');
 var mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGOLAB_PURPLE_URI || config.connectionString, { useCreateIndex: true, useNewUrlParser: true }, function(err, ok) {
+mongoose.connect(process.env.MONGOLAB_PURPLE_URI || config.dockerConnString, { useCreateIndex: true, useNewUrlParser: true }, function(err, ok) {
     if (err) {
         //console.log(err);
         throw err;

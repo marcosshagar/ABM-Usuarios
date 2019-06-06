@@ -39,7 +39,12 @@ async function getAll(userRole) {
         // Busca todos los datos menos hash
         return await User.find().select('-hash');
     } else {
-        throw "No tiene permisos de Administrador";
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos de Administrador"
+        };
+
+        throw errorModel;
     }
 }
 
@@ -50,7 +55,12 @@ async function getById(userRole, id) {
         // Busca los datos del id menos hash
         return await User.findById(id).select('-hash');
     } else {
-        throw "No tiene permisos de Administrador";
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos de Administrador"
+        };
+
+        throw errorModel;
     }
 }
 
@@ -58,11 +68,9 @@ async function getById(userRole, id) {
 async function create(userParam) {
     console.log("creando usuario", userParam);
     // valido que el usuario no este en uso
-    if (await User.findOne({ username: userParam.username })) {
+    if (await User.findOne({ username: userParam.username }))
         throw 'El usuario ' + userParam.username + ' no esta disponible';
-    }else{
-        console.log("El usuario esta disponible");
-    }
+    
     // Valido el Usuario
     validateData.validarUsername(userParam.username);
     // Valido la Contraseña
@@ -89,7 +97,13 @@ async function update(id, userParam) {
     if (!user) throw 'Usuario no encontrado';
     // Valido que el usuario nuevo sea diferente al que ya existe y no este en la base
     if (userParam.username || userParam.role) {
-        throw 'Esos datos no se pueden modificar';
+
+        errorModel = {
+            name: "Forbidden",
+            message: "No se pueden modificar Usuario ni Rol"
+        };
+
+        throw errorModel;
     }
 
     // verifico que sea valida y aplico hash a la contraseña si se cambio
@@ -103,5 +117,6 @@ async function update(id, userParam) {
 
 //------ FUNCION DELETE ----------------
 async function _delete(id) {
-    await User.findByIdAndRemove(id);
+   var user = await User.findByIdAndRemove(id);
+   if (!user) throw 'El usuario no Existe';
 }
