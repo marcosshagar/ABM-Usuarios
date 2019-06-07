@@ -7,7 +7,8 @@ function errorHandler(err, req, res, next) {
     console.log(err);
     if (typeof (err) === 'string') {
         // Errores de la aplicacion
-        return res.status(err.status).json({ message: err });
+        //return res.status(err.status).json({ message: err }); // Ver si este sirve en la otra base
+        return res.status(400).json({ message: err }); 
     }
 
     if (err.name === 'ValidationError') {

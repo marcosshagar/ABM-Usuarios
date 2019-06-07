@@ -25,7 +25,7 @@ async function authenticate({ username, password }) {
         // Le asigno a noHash todas las propiedades del usuario db menos hash (asi funcionan los ...)
         var { hash, ...noHash } = user.toObject();
         // le asigno al token los datos que va a usar durante toda la sesion
-        var token = jwt.sign({ sub: user.id, role: user.role }, config.secretPass);
+        var token = jwt.sign({ sub: user.id, role: user.role }, config.secretPass, {expiresIn: '2h'});
         // Devuelvo el token y el Usuario db sin la contraseña hasheada
         return { ...noHash,
                  token };
