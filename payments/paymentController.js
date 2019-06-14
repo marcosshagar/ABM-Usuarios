@@ -62,7 +62,8 @@ async function getAllPayments(req, res, next) {
 
     await paymentService.getAll(req.user.role)
         .then(function (payments) {
-            if(payment){
+            if(payments){
+                console.log("traigo todos los pagos")
                 res.status(200).json(payments);
             } else {
                 //peticion Ok - Respuesta sin Contenido

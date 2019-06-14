@@ -108,11 +108,12 @@ async function update(id, userParam) {
 
     // verifico que sea valida y aplico hash a la contraseña si se cambio
     if (userParam.password) {
-        validarPassword(userParam.password);
+        validateData.validarPassword(userParam.password);
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
 
-    await User.findByIdAndUpdate(id, userParam);
+    var x = await User.findByIdAndUpdate(id, userParam);
+    console.log(x);
 }
 
 //------ FUNCION DELETE ----------------

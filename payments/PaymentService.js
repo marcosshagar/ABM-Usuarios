@@ -14,8 +14,10 @@ module.exports = {
 //------ FUNCION GET ALL ----------------
 async function getAll(userRole) {
     console.log(userRole);
+    console.log("Entro aca");
     if (userRole === "Admin") {
-        return await Payment.find();
+        var payments = await Payment.find();
+        return payments;
     } else {
         throw "No tiene permisos de Administrador";
     }

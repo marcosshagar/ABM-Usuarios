@@ -80,9 +80,9 @@ async function sesionUser(req, res, next) {
 //----- FUNCION PARA MODIFICAR LOS DATOS DEL USUARIO -----
 async function update(req, res, next){
     await userService.update(req.params.id, req.body)
-        .then(function(user){
+        .then(function(){
             // Ver que onda el 200
-            res.status(201).json({ message: "Se modificaron los datos del Usuario" });
+            res.status(200).json({ message: "Se modificaron los datos del Usuario" });
         })
         .catch(function(err){
             next(err);
@@ -92,7 +92,7 @@ async function update(req, res, next){
 //----- FUNCION PARA ELIMINAR UN USUARIO -----
 async function _delete(req, res, next){
     await userService._delete(req.params.id)
-    .then(function(user){
+    .then(function(){
         res.status(200).json({message: "Se elimino el usuario"});
     })
     .catch(function(err){
