@@ -1,10 +1,10 @@
 //Marcos Shanahan
 
-var config  = require('config.json');
-var jwt     = require('jsonwebtoken');
-var bcrypt  = require('bcryptjs');
-var db      = require('helpers/db');
-var User    = db.User;
+var config       = require('config.json');
+var jwt          = require('jsonwebtoken');
+var bcrypt       = require('bcryptjs');
+var db           = require('helpers/db');
+var User         = db.User;
 var validateData = require('helpers/validate_data');
 
 module.exports = {
@@ -16,7 +16,9 @@ module.exports = {
     _delete
 };
 
-//------ FUNCION AUTHENTICATE ----------------
+//***************************************************************************************************************************************************************************************************
+//                FUNCION AUTHENTICATE
+//***************************************************************************************************************************************************************************************************
 async function authenticate({ username, password }) {
     // Busco el username en la base de datos
     var user = await User.findOne({ username });
@@ -32,10 +34,12 @@ async function authenticate({ username, password }) {
     }
 }
 
-//------ FUNCION GET ALL ----------------
-async function getAll(userRole) {
-    console.log(userRole);
-    if (userRole === "Admin") {
+//***************************************************************************************************************************************************************************************************
+//                FUNCION GET ALL
+//***************************************************************************************************************************************************************************************************
+async function getAll(sesionRole) {
+    console.log(sesionRole);
+    if (sesionRole === "Admin") {
         // Busca todos los datos menos hash
         return await User.find().select('-hash');
     } else {
@@ -48,10 +52,12 @@ async function getAll(userRole) {
     }
 }
 
-//------ FUNCION GET ByID ----------------
-async function getById(userRole, id) {
-    console.log(userRole);
-    if (userRole === "Admin") {
+//***************************************************************************************************************************************************************************************************
+//                FUNCION GET BY ID
+//***************************************************************************************************************************************************************************************************
+async function getById(sesionRole, id) {
+    console.log(sesionRole);
+    if (sesionRole === "Admin") {
         // Busca los datos del id menos hash
         return await User.findById(id).select('-hash');
     } else {
@@ -64,7 +70,9 @@ async function getById(userRole, id) {
     }
 }
 
-//------ FUNCION CREATE ----------------
+//***************************************************************************************************************************************************************************************************
+//                FUNCION CREATE
+//***************************************************************************************************************************************************************************************************
 async function create(userParam) {
     console.log("creando usuario", userParam);
     // valido que el usuario no este en uso
@@ -89,13 +97,25 @@ async function create(userParam) {
     await user.save();
 }
 
-//------ FUNCION UPDATE ----------------
-async function update(id, userParam) {
-    var user = await User.findById(id);
+//***************************************************************************************************************************************************************************************************
+//                FUNCION UPDATE
+//***************************************************************************************************************************************************************************************************
+async function update(id, sesionId, userParam) {
 
+    var user = await User.findById(id);
     // Valido que el usuario exista
     if (!user) throw 'Usuario no encontrado';
-    // Valido que el usuario nuevo sea diferente al que ya existe y no este en la base
+
+    // Valido que el usuario que quiero modificar sea el mismo de la sesion
+    if (sesionId !== id) {
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos para modificar los datos de este Usuario"
+        };
+        throw errorModel;
+    }
+        
+    // Valido que no pueda modificar Username ni Rol
     if (userParam.username || userParam.role) {
 
         errorModel = {
@@ -112,12 +132,30 @@ async function update(id, userParam) {
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
 
-    var x = await User.findByIdAndUpdate(id, userParam);
-    console.log(x);
+    await User.findByIdAndUpdate(id, userParam);
+    
 }
 
-//------ FUNCION DELETE ----------------
-async function _delete(id) {
-   var user = await User.findByIdAndRemove(id);
-   if (!user) throw 'El usuario no Existe';
+//***************************************************************************************************************************************************************************************************
+//                FUNCION DELETE
+//***************************************************************************************************************************************************************************************************
+async function _delete(id, sesionId, sesionRole) {
+
+    var user = await User.findById(id);
+    // Valido que el usuario exista
+    if (!user) throw 'Usuario no encontrado';
+    // Valido que el usuario de la sesion sea Administrador o el mismo que quiere Eliminarse
+    if ((sesionRole === "Admin") || (sesionId === id)) {
+
+        await User.findByIdAndRemove(id); 
+
+    } else {
+
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos para eliminar este Usuario"
+        };
+        throw errorModel;
+    } 
 }
+//***************************************************************************************************************************************************************************************************

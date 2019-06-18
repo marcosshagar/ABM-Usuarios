@@ -1,11 +1,11 @@
 //Marcos Shanahan
 
 require('rootpath')();
-var express = require('express');
-var app = express();
-var cors = require('cors');
-var bodyParser = require('body-parser');
-var exJwt = require('helpers/expressJwt')
+var express      = require('express');
+var app          = express();
+var cors         = require('cors');
+var bodyParser   = require('body-parser');
+var exJwt        = require('helpers/expressJwt')
 var errorHandler = require('helpers/error_handler')
 
 //app.use significa que siempre el request que se haga va a pasar por ahi

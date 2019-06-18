@@ -1,7 +1,7 @@
 //Marcos Shanahan
 
-var express = require('express');
-var router = express.Router();
+var express     = require('express');
+var router      = express.Router();
 var userService = require('./userService');
 
 // Defino las rutas paras las acciones a realizar
@@ -79,7 +79,7 @@ async function sesionUser(req, res, next) {
 
 //----- FUNCION PARA MODIFICAR LOS DATOS DEL USUARIO -----
 async function update(req, res, next){
-    await userService.update(req.params.id, req.body)
+    await userService.update(req.params.id, req.user.sub, req.body)
         .then(function(){
             // Ver que onda el 200
             res.status(200).json({ message: "Se modificaron los datos del Usuario" });
@@ -91,7 +91,7 @@ async function update(req, res, next){
 
 //----- FUNCION PARA ELIMINAR UN USUARIO -----
 async function _delete(req, res, next){
-    await userService._delete(req.params.id)
+    await userService._delete(req.params.id, req.user.sub, req.user.role)
     .then(function(){
         res.status(200).json({message: "Se elimino el usuario"});
     })

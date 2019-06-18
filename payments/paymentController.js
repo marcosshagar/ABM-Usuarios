@@ -1,8 +1,8 @@
 //Marcos Shanahan
 
-var express = require('express');
-var router = express.Router();
-var paymentService = require("./PaymentService");
+var express         = require('express');
+var router          = express.Router();
+var paymentService  = require("./PaymentService");
 
 router.post('/pay', payments);
 router.get('/:id', getPayment);

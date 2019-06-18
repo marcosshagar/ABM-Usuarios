@@ -1,7 +1,7 @@
 //Marcos Shanahan
 
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var Schema   = mongoose.Schema;
 
 var paymentSchema = new Schema({
 
