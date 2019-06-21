@@ -21,7 +21,8 @@ function errorHandler(err, req, res, next) {
     }
 
     if (err.name === 'CastError') {
-        return res.status(400).json({ message: err.message });
+        return res.status(400).json({ message: "ID tene formato invalido" });
+        //return res.status(400).json({ message: err.message });
     }
 
     if (err.name === "Bad Request"){
