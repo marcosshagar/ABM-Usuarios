@@ -62,7 +62,7 @@ async function getUser(req, res, next) {
 
 //----- FUNCION PARA OBTENER EL USUARIO DE LA SESION ACTUAL -----
 async function sesionUser(req, res, next) {
-    await userService.getById(req.user.sub)
+    await userService.getSesionUser(req.user.sub)
         .then(function(user){
             if(user){
                 res.json(user);
