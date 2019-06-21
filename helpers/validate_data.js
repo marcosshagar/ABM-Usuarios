@@ -1,8 +1,8 @@
 //Marcos Shanahan
 
-var DataValidator = require('password-validator');
-var passValidators = new DataValidator();
-var userValidators = new DataValidator();
+var DataValidator   = require('password-validator');
+var passValidators  = new DataValidator();
+var userValidators  = new DataValidator();
 
 passValidators
 .is().min(8)                           

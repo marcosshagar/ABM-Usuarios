@@ -1,7 +1,7 @@
 //Marcos Shanahan
 
-var expressJwt = require('express-jwt');
-var config = require('config.json');
+var expressJwt  = require('express-jwt');
+var config      = require('config.json');
 //var userService = require('../usuarios/servicioUsuarios');
 
 module.exports = jwt;

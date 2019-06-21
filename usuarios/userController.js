@@ -1,7 +1,7 @@
 //Marcos Shanahan
 
-var express = require('express');
-var router = express.Router();
+var express     = require('express');
+var router      = express.Router();
 var userService = require('./userService');
 
 // Defino las rutas paras las acciones a realizar
@@ -20,8 +20,9 @@ async function authenticate(req, res, next) {
     await userService.authenticate(req.body)
         .then(function (user) {
             if (user) {
-                res.json(user);
+                res.status(200).json(user);
             } else {
+                //No se púede interpretar debido a sintaxis invalida
                 res.status(400).json({message: "Usuario o Contraseña incorrecta"});
             }
         })
@@ -35,7 +36,7 @@ async function create(req, res, next) {
     console.log("inicio registro");
     await userService.create(req.body)
         .then(function(){
-            res.json({ message: "Se registro el usuario " + req.body.username + " correctamente."});
+            res.status(201).json({ message: "Se registro el usuario " + req.body.username + " correctamente."});
         })
         .catch(function (err) {
             next(err);
@@ -48,7 +49,7 @@ async function getUser(req, res, next) {
         .then(function(user){
             if(user){
                 console.log("Usuario encontrado")
-                res.json(user);
+                res.status(200).json(user);
             } else {
                 console.log("Sending Status")
                 res.status(404).json({message: "Usuario no encontrado"});
@@ -61,7 +62,7 @@ async function getUser(req, res, next) {
 
 //----- FUNCION PARA OBTENER EL USUARIO DE LA SESION ACTUAL -----
 async function sesionUser(req, res, next) {
-    await userService.getById(req.user.sub)
+    await userService.getSesionUser(req.user.sub)
         .then(function(user){
             if(user){
                 res.json(user);
@@ -78,20 +79,21 @@ async function sesionUser(req, res, next) {
 
 //----- FUNCION PARA MODIFICAR LOS DATOS DEL USUARIO -----
 async function update(req, res, next){
-    await userService.update(req.params.id, req.body)
-    .then(function(user){
-            res.json({ message: "Se modificaron los datos del Usuario" });
-    })
-    .catch(function(err){
-        next(err);
-    });
+    await userService.update(req.params.id, req.user.sub, req.body)
+        .then(function(){
+            // Ver que onda el 200
+            res.status(200).json({ message: "Se modificaron los datos del Usuario" });
+        })
+        .catch(function(err){
+            next(err);
+        });
 }
 
 //----- FUNCION PARA ELIMINAR UN USUARIO -----
 async function _delete(req, res, next){
-    await userService._delete(req.params.id)
+    await userService._delete(req.params.id, req.user.sub, req.user.role)
     .then(function(){
-        res.json({message: "Se elimino el usuario"});
+        res.status(200).json({message: "Se elimino el usuario"});
     })
     .catch(function(err){
         next(err);
@@ -102,7 +104,13 @@ async function _delete(req, res, next){
 async function getAll(req, res, next) {
     await userService.getAll(req.user.role)
         .then(function(users){
-            res.json(users);
+            if(users){
+                console.log("Usuarios encontrados")
+                res.status(200).json(users);
+            } else {
+                console.log("Sending Status")
+                res.status(404).json({message: "No hay Usuarios Registrados"});
+            }
         })
         .catch(function(err){
             next(err);

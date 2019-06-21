@@ -1,22 +1,25 @@
 //Marcos Shanahan
 
-var config  = require('config.json');
-var jwt     = require('jsonwebtoken');
-var bcrypt  = require('bcryptjs');
-var db      = require('helpers/db');
-var User    = db.User;
+var config       = require('config.json');
+var jwt          = require('jsonwebtoken');
+var bcrypt       = require('bcryptjs');
+var db           = require('helpers/db');
+var User         = db.User;
 var validateData = require('helpers/validate_data');
 
 module.exports = {
     authenticate,
     getAll,
     getById,
+    getSesionUser,
     create,
     update,
     _delete
 };
 
-//------ FUNCION AUTHENTICATE ----------------
+//***************************************************************************************************************************************************************************************************
+//                FUNCION AUTHENTICATE
+//***************************************************************************************************************************************************************************************************
 async function authenticate({ username, password }) {
     // Busco el username en la base de datos
     var user = await User.findOne({ username });
@@ -25,44 +28,58 @@ async function authenticate({ username, password }) {
         // Le asigno a noHash todas las propiedades del usuario db menos hash (asi funcionan los ...)
         var { hash, ...noHash } = user.toObject();
         // le asigno al token los datos que va a usar durante toda la sesion
-        var token = jwt.sign({ sub: user.id, role: user.role }, config.secretPass);
+        var token = jwt.sign({ sub: user.id, role: user.role }, config.secretPass, {expiresIn: '2h'});
         // Devuelvo el token y el Usuario db sin la contraseña hasheada
         return { ...noHash,
                  token };
     }
 }
 
-//------ FUNCION GET ALL ----------------
-async function getAll(userRole) {
-    console.log(userRole);
-    if (userRole === "Admin") {
+//***************************************************************************************************************************************************************************************************
+//                FUNCION GET ALL
+//***************************************************************************************************************************************************************************************************
+async function getAll(sesionRole) {
+    console.log(sesionRole);
+    if (sesionRole === "Admin") {
         // Busca todos los datos menos hash
         return await User.find().select('-hash');
     } else {
-        throw "No tiene permisos de Administrador";
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos de Administrador"
+        };
+
+        throw errorModel;
     }
 }
 
-//------ FUNCION GET ByID ----------------
-async function getById(userRole, id) {
-    console.log(userRole);
-    if (userRole === "Admin") {
+//***************************************************************************************************************************************************************************************************
+//                FUNCION GET BY ID
+//***************************************************************************************************************************************************************************************************
+async function getById(sesionRole, id) {
+    console.log(sesionRole);
+    if (sesionRole === "Admin") {
         // Busca los datos del id menos hash
         return await User.findById(id).select('-hash');
     } else {
-        throw "No tiene permisos de Administrador";
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos de Administrador"
+        };
+
+        throw errorModel;
     }
 }
 
-//------ FUNCION CREATE ----------------
+//***************************************************************************************************************************************************************************************************
+//                FUNCION CREATE
+//***************************************************************************************************************************************************************************************************
 async function create(userParam) {
     console.log("creando usuario", userParam);
     // valido que el usuario no este en uso
-    if (await User.findOne({ username: userParam.username })) {
+    if (await User.findOne({ username: userParam.username }))
         throw 'El usuario ' + userParam.username + ' no esta disponible';
-    }else{
-        console.log("El usuario esta disponible");
-    }
+    
     // Valido el Usuario
     validateData.validarUsername(userParam.username);
     // Valido la Contraseña
@@ -81,27 +98,77 @@ async function create(userParam) {
     await user.save();
 }
 
-//------ FUNCION UPDATE ----------------
-async function update(id, userParam) {
-    var user = await User.findById(id);
+//***************************************************************************************************************************************************************************************************
+//                FUNCION UPDATE
+//***************************************************************************************************************************************************************************************************
+async function update(id, sesionId, userParam) {
 
+    var user = await User.findById(id);
     // Valido que el usuario exista
     if (!user) throw 'Usuario no encontrado';
-    // Valido que el usuario nuevo sea diferente al que ya existe y no este en la base
+
+    // Valido que el usuario que quiero modificar sea el mismo de la sesion
+    if (sesionId !== id) {
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos para modificar los datos de este Usuario"
+        };
+        throw errorModel;
+    }
+        
+    // Valido que no pueda modificar Username ni Rol
     if (userParam.username || userParam.role) {
-        throw 'Esos datos no se pueden modificar';
+
+        errorModel = {
+            name: "Forbidden",
+            message: "No se pueden modificar Usuario ni Rol"
+        };
+
+        throw errorModel;
     }
 
     // verifico que sea valida y aplico hash a la contraseña si se cambio
     if (userParam.password) {
-        validarPassword(userParam.password);
+        validateData.validarPassword(userParam.password);
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
 
     await User.findByIdAndUpdate(id, userParam);
+    
 }
 
-//------ FUNCION DELETE ----------------
-async function _delete(id) {
-    await User.findByIdAndRemove(id);
+//***************************************************************************************************************************************************************************************************
+//                FUNCION DELETE
+//***************************************************************************************************************************************************************************************************
+async function _delete(id, sesionId, sesionRole) {
+
+    var user = await User.findById(id);
+    // Valido que el usuario exista
+    if (!user) throw 'Usuario no encontrado';
+    // Valido que el usuario de la sesion sea Administrador o el mismo que quiere Eliminarse
+    if ((sesionRole === "Admin") || (sesionId === id)) {
+
+        await User.findByIdAndRemove(id); 
+
+    } else {
+
+        errorModel = {
+            name: "Forbidden",
+            message: "No tiene permisos para eliminar este Usuario"
+        };
+        throw errorModel;
+    } 
 }
+
+//***************************************************************************************************************************************************************************************************
+//                FUNCION GET SESION USER
+//***************************************************************************************************************************************************************************************************
+async function getSesionUser(id) {
+
+    // Busca los datos del id menos hash
+    var user =  await User.findById(id).select('-hash');
+
+    return user;
+
+}
+//***************************************************************************************************************************************************************************************************
