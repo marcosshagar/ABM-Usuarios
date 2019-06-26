@@ -5,8 +5,8 @@ var Schema   = mongoose.Schema;
 
 var paymentSchema = new Schema({
 
-    userId: { type: String, unique: true, required: true },
-    transaction_id: { type: Number, unique: true, required: true },
+    userId: { type: String, required: true },
+    transaction_id: { type: Number, required: true },
     transaction_amount: { type: Number, required: true },
     installments: { type: Number, required: true },
     payment_method_id: { type: String, required: true },
