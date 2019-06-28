@@ -12,7 +12,7 @@ module.exports = router;
 
 async function  payments(req, res, next) {
     //console.log(req);
-    console.log("Ingreso al controlador para pagar", req);
+    //console.log("Ingreso al controlador para pagar", req);
 
     var paymentDto = {
         userId: req.user.sub,
@@ -29,7 +29,7 @@ async function  payments(req, res, next) {
     try{
 
         let payment = await paymentService.create(paymentDto);
-        console.log(payment);
+        //console.log(payment);
         //Codigo 203 - Respuesta correcta proveniente de otro servidor
         return res.status(201).json(payment);
 

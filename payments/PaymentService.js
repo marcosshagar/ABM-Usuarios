@@ -94,7 +94,7 @@ async function create(paymentDto) {
         
 
     } catch (err) {
-        console.log(err);
+        //console.log(err);
 
         if (err.code === "ENOTFOUND") {
 
@@ -108,7 +108,7 @@ async function create(paymentDto) {
                 message: err.response.body.message
             };
 
-            console.log("Modelo de error", errorModel);
+        //    console.log("Modelo de error", errorModel);
             Object.assign(err, errorModel);
         }
 
