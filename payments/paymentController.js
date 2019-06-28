@@ -12,7 +12,7 @@ module.exports = router;
 
 async function  payments(req, res, next) {
     //console.log(req);
-    console.log("Ingreso al controlador para pagar");
+    console.log("Ingreso al controlador para pagar", req);
 
     var paymentDto = {
         userId: req.user.sub,
