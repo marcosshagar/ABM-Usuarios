@@ -50,6 +50,7 @@ async function getById(userRole, userId, transaction_id) {
 //***************************************************************************************************************************************************************************************************
 async function create(paymentDto) {
 
+    console.log("llego una tx: ", paymentDto);
     var mpRequest = {
         transaction_amount: paymentDto.amount,
         payment_method_id: paymentDto.mpPaymentMethodId,
@@ -68,7 +69,7 @@ async function create(paymentDto) {
 
     try {
         
-        console.log("envio a mercado pago");
+        console.log("envio a mercado pago: ", mpRequest);
         var mpResonse = await request.post(config.paymentRequest).send(mpRequest).set('Content-Type', 'application/json');
 
         console.log("Mercado pago Response", mpResonse);
