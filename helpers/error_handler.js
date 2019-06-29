@@ -4,7 +4,7 @@ module.exports = errorHandler;
 
 function errorHandler(err, req, res, next) {
     console.log("Ingreso a manejo de errores");
-    //console.log(err);
+    console.log(err);
     if (typeof (err) === 'string') {
         // Errores de la aplicacion
         return res.status(400).json({ message: err }); 
