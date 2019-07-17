@@ -10,7 +10,7 @@ router.post('/create', create);
 router.get('/', getAll); //Admin
 router.get('/me', sesionUser);
 router.get('/:id', getUser); //Admin
-router.put('/:id', update);
+router.patch('/:id', update);
 router.delete('/:id', _delete);
 
 module.exports = router;
@@ -20,7 +20,7 @@ async function authenticate(req, res, next) {
     await userService.authenticate(req.body)
         .then(function (user) {
             if (user) {
-                res.status(200).json(user);
+                res.status(201).json(user);
             } else {
                 //No se púede interpretar debido a sintaxis invalida
                 res.status(400).json({message: "Usuario o Contraseña incorrecta"});
